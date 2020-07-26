@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const createError = require('http-errors');
 
+require('./helpers/db')();
+
 const app = express();
 
 app.use(cors());
@@ -16,13 +18,16 @@ app.use((req, res, next) => {
 
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.status || 500).json({
+  err.status = err.status || 500;
+
+  // hide internal server error logs in production mode
+  if (process.env.NODE_ENV === 'production' && err.status === 500) {
+    err.message = 'Internal Server Error';
+  }
+
+  res.status(err.status).json({
     status: 'error',
-    message:
-      // hide internal error logs in production mode
-      process.env.NODE_ENV === 'production'
-        ? 'Internal Server Error'
-        : err.message,
+    message: err.message,
   });
 });
 
