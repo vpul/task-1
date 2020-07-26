@@ -1,7 +1,27 @@
-const login = (req, res, next) => {
-  res.status(200).json({
-    hello: 'world',
-  });
+const createError = require('http-errors');
+const User = require('../models/user');
+
+const login = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    // if user does not exist
+    if (!user) {
+      return next(createError(400, 'Invalid Email or Password'));
+    }
+
+    // if password matched
+    if (await user.passwordMatch(req.body.password || '')) {
+      return res.status(200).json({
+        success: true,
+        payload: user,
+      });
+    }
+
+    // if user exists password did not match
+    return next(createError(400, 'Invalid Email or Password'));
+  } catch (err) {
+    next(err);
+  }
 };
 
 module.exports = login;

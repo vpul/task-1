@@ -22,4 +22,10 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+userSchema.methods.passwordMatch = async function (candidatePassword) {
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
+  delete this.toObject().password;
+  return isMatch;
+};
+
 module.exports = mongoose.model('User', userSchema);
