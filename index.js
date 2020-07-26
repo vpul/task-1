@@ -12,13 +12,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/', (req, res, next) => res.send('API running successfully.'));
+app.get('/', (req, res, next) => res.send('API running successfully.'));
 app.use('/api/auth', auth);
 
 app.use((req, res, next) => {
   next(createError(404, 'Not found'));
 });
 
+// error handler
 app.use((err, req, res, next) => {
   console.error(err);
   err.status = err.status || 500;
