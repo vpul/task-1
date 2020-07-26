@@ -36,7 +36,7 @@ const validationSchema = Joi.object({
   education: Joi.string().valid('SEE', 'Bachelors', 'Masters', 'PhD'),
 
   phone: Joi.string()
-    .pattern(/^\+?(?:[0-9] ?-?){6,14}[0-9]$/) // Can contain '+' at the beginning, followed by numbers. Can have space or '-' in between numbers. Min length 7, max length 15
+    .pattern(/^\+?(?:[0-9] ?-?){6,14}[0-9]$/)
     .required()
     .error(new Error('Invalid phone number')),
 });
