@@ -2,9 +2,10 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const createError = require('http-errors');
-
 const connectToDB = require('./helpers/db');
+
 const auth = require('./routes/auth');
+const user = require('./routes/user');
 
 connectToDB();
 const app = express();
@@ -12,8 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req, res, next) => res.send('API running successfully.'));
+app.get('/', (req, res) => res.send('API running successfully.'));
 app.use('/api/auth', auth);
+app.use('/api/user', user);
 
 app.use((req, res, next) => {
   next(createError(404, 'Not found'));

@@ -1,5 +1,9 @@
 const createError = require('http-errors');
 const User = require('../models/user');
+const {
+  generateAccessToken,
+  generateRefreshToken,
+} = require('../helpers/tokenGenerator');
 
 const login = async (req, res, next) => {
   try {
@@ -11,8 +15,13 @@ const login = async (req, res, next) => {
 
     // if password matched
     if (await user.passwordMatch(req.body.password || '')) {
+      const accessToken = generateAccessToken({ userId: user.id });
+      const refreshToken = generateRefreshToken({ userId: user.id });
+
       return res.status(200).json({
         success: true,
+        accessToken,
+        refreshToken,
         payload: user,
       });
     }

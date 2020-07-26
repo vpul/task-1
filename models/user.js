@@ -12,6 +12,7 @@ const userSchema = mongoose.Schema({
   education: { type: String, required: true, trim: true },
 });
 
+// hash password before saving
 userSchema.pre('save', async function (next) {
   try {
     if (!this.isModified('password')) return next(); // only hash the password if it has been modified (or is new)
@@ -22,6 +23,7 @@ userSchema.pre('save', async function (next) {
   }
 });
 
+// check whether password matches with the one in the db
 userSchema.methods.passwordMatch = async function (candidatePassword) {
   const isMatch = await bcrypt.compare(candidatePassword, this.password);
   delete this.toObject().password;
