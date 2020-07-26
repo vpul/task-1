@@ -28,4 +28,11 @@ userSchema.methods.passwordMatch = async function (candidatePassword) {
   return isMatch;
 };
 
+// remove password from http response
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
+
 module.exports = mongoose.model('User', userSchema);
