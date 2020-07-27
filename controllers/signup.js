@@ -8,13 +8,14 @@ const signup = async (req, res, next) => {
       return next(createError(400, 'User with that email already exists'));
     }
 
+    req.body.photo = `uploads/${req.file.filename}`;
     const newUser = await User.create(req.body);
     return res.status(201).json({
       status: 'success',
       payload: newUser,
     });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 };
 

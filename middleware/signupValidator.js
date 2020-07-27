@@ -31,9 +31,11 @@ const validationSchema = Joi.object({
     .required()
     .error(new Error('Invalid last name')),
 
-  gender: Joi.string().valid('male', 'female', 'other'),
+  gender: Joi.string().required().valid('male', 'female', 'other'),
 
-  education: Joi.string().valid('SEE', 'Bachelors', 'Masters', 'PhD'),
+  education: Joi.string()
+    .required()
+    .valid('SEE', 'Bachelors', 'Masters', 'PhD'),
 
   phone: Joi.string()
     .pattern(/^\+?(?:[0-9] ?-?){6,14}[0-9]$/)
