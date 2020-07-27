@@ -18,12 +18,26 @@ const login = async (req, res, next) => {
       const accessToken = generateAccessToken({ userId: user.id });
       const refreshToken = generateRefreshToken({ userId: user.id });
 
-      return res.status(200).json({
-        success: true,
-        accessToken,
-        refreshToken,
-        payload: user,
-      });
+      return res
+        .status(200)
+        .cookie('access_token', accessToken, {
+          httpOnly: true,
+          sameSite: 'strict',
+          path: '/',
+          maxAge: 1000 * 60 * 60,
+          secure: process.env.NODE_ENV === 'production',
+        })
+        .cookie('refresh_token', refreshToken, {
+          httpOnly: true,
+          sameSite: 'strict',
+          path: '/',
+          maxAge: 1000 * 60 * 60 * 24 * 30,
+          secure: process.env.NODE_ENV === 'production',
+        })
+        .json({
+          success: true,
+          payload: user,
+        });
     }
 
     // if user exists password did not match

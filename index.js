@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const createError = require('http-errors');
+const cookieParser = require('cookie-parser');
 const connectToDB = require('./helpers/db');
 
 const auth = require('./routes/auth');
@@ -11,6 +12,7 @@ connectToDB();
 const app = express();
 
 app.use(express.static(`${__dirname}/public`));
+app.use(cookieParser());
 app.use(cors());
 app.use(express.json());
 

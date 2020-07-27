@@ -2,11 +2,12 @@ const jwt = require('jsonwebtoken');
 const createError = require('http-errors');
 
 module.exports = async (req, res, next) => {
-  let token = req.headers.authorization;
   try {
-    if (token) {
-      token = token.startsWith('Bearer') ? token.split(' ')[1] : token;
-      const payload = jwt.verify(token, process.env.JWT_SECRET);
+    if (req.cookie) {
+      const payload = jwt.verify(
+        req.cookie.accessToken,
+        process.env.JWT_SECRET,
+      );
       res.locals = payload;
       return next();
     }
